@@ -13,6 +13,7 @@ namespace B13\Container\Backend\Grid;
  */
 
 use B13\Container\Domain\Model\Container;
+use B13\Container\Tca\Registry;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumn;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
@@ -22,10 +23,17 @@ class ContainerGridColumn extends GridColumn
 {
     protected $container;
 
-    public function __construct(PageLayoutContext $context, array $columnDefinition, Container $container)
+    protected $registry;
+
+    public function __construct(PageLayoutContext $context, array $columnDefinition, Container $container, Registry $registry = null)
     {
         parent::__construct($context, $columnDefinition);
         $this->container = $container;
+        if ($registry === null) {
+            trigger_error('Registry is required as constructor argument', E_USER_DEPRECATED);
+            $registry = GeneralUtility::makeInstance(Registry::class);
+        }
+        $this->registry = $registry;
     }
 
     public function getContainerUid(): int
@@ -55,6 +63,7 @@ class ContainerGridColumn extends GridColumn
     public function getNewContentUrl(): string
     {
         $pageId = $this->context->getPageId();
+        $target = $this->container->getFirstNewContentElementTarget($this->getColumnNumber(), $this->registry);
         $urlParameters = [
             'id' => $pageId,
             'sys_language_uid' => $this->container->getLanguage(),

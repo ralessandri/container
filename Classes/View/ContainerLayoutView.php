@@ -116,12 +116,13 @@ class ContainerLayoutView extends PageLayoutView
     protected function buildNewContentElementWizardLinkTop(int $colPos): string
     {
         $containerRecord = $this->container->getContainerRecord();
+        $target = $this->container->getFirstNewContentElementTarget($colPos, $this->registry);
         $urlParameters = [
             'id' => $containerRecord['pid'],
             'sys_language_uid' => $this->container->getLanguage(),
             'tx_container_parent' => $containerRecord['uid'],
             'colPos' => $colPos,
-            'uid_pid' => $containerRecord['pid'],
+            'uid_pid' => $target,
             'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
         ];
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);

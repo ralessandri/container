@@ -326,6 +326,16 @@ class Registry implements SingletonInterface
         return $columns;
     }
 
+    public function getAvailableColumnsColPos(string $cType): array
+    {
+        $columns = $this->getAvailableColumns($cType);
+        $availableColumnsColPos = [];
+        foreach ($columns as $column) {
+            $availableColumnsColPos[] = $column['colPos'];
+        }
+        return $availableColumnsColPos;
+    }
+
     /**
      * Adds TSconfig
      *

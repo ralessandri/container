@@ -60,7 +60,7 @@ class ContainerPreviewRenderer extends StandardContentPreviewRenderer
         foreach ($containerGrid as $row => $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
-                $columnObject = GeneralUtility::makeInstance(ContainerGridColumn::class, $context, $col, $container);
+                $columnObject = GeneralUtility::makeInstance(ContainerGridColumn::class, $context, $col, $container, $this->tcaRegistry);
                 $rowObject->addColumn($columnObject);
                 if (isset($col['colPos'])) {
                     $records = $container->getChildrenByColPos($col['colPos']);

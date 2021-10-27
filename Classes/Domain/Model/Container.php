@@ -12,6 +12,8 @@ namespace B13\Container\Domain\Model;
  * of the License, or any later version.
  */
 
+use B13\Container\Tca\Registry;
+
 class Container
 {
     /**
@@ -102,6 +104,25 @@ class Container
             $childRecords = array_merge($childRecords, $records);
         }
         return $childRecords;
+    }
+
+    public function getFirstNewContentElementTarget(int $targetColPos, Registry $registry): int
+    {
+        $containerRecord = $this->getContainerRecord();
+        $target = -$containerRecord['uid'];
+        $previousRecord = null;
+        $allColumns = $registry->getAvailableColumnsColPos($this->getCType());
+        foreach ($allColumns as $colPos) {
+            if ($colPos === $targetColPos && $previousRecord !== null) {
+                $target = -$previousRecord['uid'];
+            }
+            $children = $this->getChildrenByColPos($colPos);
+            if (!empty($children)) {
+                $last = array_pop($children);
+                $previousRecord = $last;
+            }
+        }
+        return $target;
     }
 
     /**
